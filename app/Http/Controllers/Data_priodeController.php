@@ -44,6 +44,7 @@ class Data_priodeController extends Controller
             DB::table('periode')->insert([
                 'tahun_ajaran' => $request->tahun_ajaran,
                 'periode_aktif' => $request->periode_aktif,
+                'created_at' => now(),
             ]);
             return redirect('/data_priode')->with('success', 'Data periode berhasil ditambahkan.');
         }

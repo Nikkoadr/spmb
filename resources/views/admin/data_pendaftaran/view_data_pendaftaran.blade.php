@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 @endsection
 @section('title')
-    {{'Data PPDB'}}
+    {{'Data SPMB'}}
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -21,7 +21,7 @@
         <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Admin</a></li>
-            <li class="breadcrumb-item active">Data PPDB</li>
+            <li class="breadcrumb-item active">Data SPMB</li>
         </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
@@ -79,10 +79,10 @@
                                     <span class="badge badge-warning">{{ $pendaftar->nama_status_siswa }}</span>
                                     @break
                                 @case(3)
-                                    <span class="badge badge-primary">{{ $pendaftar->nama_status_siswa }}</span>
+                                    <span class="badge badge-info">{{ $pendaftar->nama_status_siswa }}</span>
                                     @break
                                 @case(4)
-                                    <span class="badge badge-info">{{ $pendaftar->nama_status_siswa }}</span>
+                                    <span class="badge badge-primary">{{ $pendaftar->nama_status_siswa }}</span>
                                     @break
                             @endswitch
                         </td>

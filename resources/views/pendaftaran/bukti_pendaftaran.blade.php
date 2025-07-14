@@ -15,7 +15,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Print PPDB SMK Muhammadiyah Kandanghaur</title>
+    <title>Print SPMB SMK Muhammadiyah Kandanghaur</title>
 </head>
 <body>
     <div class="page">
@@ -25,7 +25,7 @@
                     <img src="{{ asset('assets/img/dikdasmenmuh.png') }}" width="100%">
                 </td>
                 <td align="center" valign="middle">
-                    <b style="color:#007bff;font-size:14px !important;">MAJELIS PENDIDIKAN DASAR DAN MENENGAH DAN PENDIDIKAN NON FORMAL</b><br>
+                    <b style="color:#007bff;font-size:14px !important;">MAJELIS PENDIDIKAN DASAR DAN MENENGAH DAN PENDIDIKAN NONFORMAL</b><br>
                     <b style="color:#007bff;font-size:14px !important;">PIMPINAN WILAYAH MUHAMMADIYAH JAWA BARAT</b><br>
                     <b style="color:#007bff;font-size:20px !important;">SMK MUHAMMADIYAH KANDANGHAUR</b><br>
                     <b style="color:#007bff;font-size:20px !important;">SMK PUSAT KEUNGGULAN (PK)</b><br>
@@ -97,21 +97,21 @@
                         Customer Services SMK : 08122207770
                     </div>
                 </td>
-                <td align="center">
-                    <p>Barcode Pengisian Ukuran Baju</p>
+                {{-- <td align="center">
+                    <p>Barcode Pengisian Ukuran Seragam</p>
                     <br>
-                    {!! QrCode::size(70)->backgroundColor(255,255,255)->generate('https://ppdb.smkmuhkandanghaur.sch.id/isi_ukuran_baju/'.$pendaftaran->no_pendaftaran) !!}
+                    {!! QrCode::size(70)->backgroundColor(255,255,255)->generate(env('APP_URL').'/isi_ukuran_seragam/'.$pendaftaran->no_pendaftaran) !!}
                     <br>
                     <br>
                     <br>
-                </td>
+                </td> --}}
                 <td align="center">
                     <p>Indramayu, {{ \Carbon\Carbon::parse($pendaftaran->created_at)->translatedFormat('d F Y') }}</p>
                     <br>
-                    {!! QrCode::size(70)->backgroundColor(255,255,255)->generate('https://ppdb.smkmuhkandanghaur.sch.id/scan/'.$pendaftaran->no_pendaftaran) !!}
+                    {!! QrCode::size(70)->backgroundColor(255,255,255)->generate(env('APP_URL').'/scan/'.$pendaftaran->no_pendaftaran) !!}
                     <br>
                     <br>
-                    <p>Panitia PPDB</p>
+                    <p>Panitia SPMB</p>
                 </td>
             </tr>
         </table>

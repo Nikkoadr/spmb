@@ -54,7 +54,7 @@ class Cari_pendaftaranController extends Controller
         return view('pendaftaran.scan_pendaftaran', compact('pendaftaran'));
     }
 
-    public function isi_ukuran_baju($code)
+    public function isi_ukuran_seragam($code)
     {
         $pendaftaran = DB::table('pendaftaran')
             ->leftJoin('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')

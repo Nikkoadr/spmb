@@ -26,8 +26,10 @@ class CreatePendaftaranTable extends Migration
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->foreignId('id_asal_sekolah')->nullable()->index()->references('id')->on('asal_sekolah');
+            $table->string('nik_ayah')->nullable();
             $table->string('nama_ayah')->nullable();
             $table->string('pekerjaan_ayah')->nullable();
+            $table->string('nik_ibu')->nullable();
             $table->string('nama_ibu')->nullable();
             $table->string('pekerjaan_ibu')->nullable();
             $table->foreignId('id_status_orang_tua')->nullable()->index()->references('id')->on('status_orang_tua');

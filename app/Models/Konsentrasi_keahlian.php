@@ -9,4 +9,9 @@ class Konsentrasi_keahlian extends Model
 {
     protected $table = 'konsentrasi_keahlian';
     protected $guarded = [];
+
+    public function pendaftaran()
+    {
+        return $this->hasMany(Pendaftaran::class, 'id_konsentrasi_keahlian');
+    }
 }

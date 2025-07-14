@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>@yield('title') | SMK MUH KDH</title>
+  <title>@yield('title') | Smkmuhkandanghaur</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
@@ -27,7 +27,7 @@
   <div class="float-right d-none d-sm-inline-block">
     <b>Version</b> 1.1.2
   </div>
-    <strong>Copyright &copy; 2023-2024 <a href="https://github.com/Nikkoadr">Nikko Adrian</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2023-2026 <a href="#">Nikko Adrian</a>.</strong> All rights reserved.
   </footer>
 </div>
 <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>

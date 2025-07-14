@@ -15,13 +15,16 @@ class seed_status_siswa extends Seeder
     public function run()
     {
         Status_siswa::create([
-            'nama_status_siswa' => 'Tidak Tervalidasi',
+            'nama_status_siswa' => 'Belum Ukur Seragam+Belum DU',
         ]);
         Status_siswa::create([
-            'nama_status_siswa' => 'Tervalidasi',
+            'nama_status_siswa' => 'Sudah Ukur Seragam+Belum DU',
         ]);
         Status_siswa::create([
-            'nama_status_siswa' => 'Sudah Daftar Ulang',
+            'nama_status_siswa' => 'Sudah DU+Belum Ukur Seragam',
+        ]);
+        Status_siswa::create([
+            'nama_status_siswa' => 'Sudah DU+Sudah Ukur Seragam',
         ]);
     }
 }

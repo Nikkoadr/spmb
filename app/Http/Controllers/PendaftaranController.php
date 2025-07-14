@@ -9,7 +9,8 @@ use Illuminate\Support\Str;
 
 class PendaftaranController extends Controller
 {
-    public function form_pendaftaran(){
+    public function form_pendaftaran()
+    {
         $periode = DB::table('periode')->orderBy('created_at', 'desc')->first();
         $jenis_kelamin = DB::table('jenis_kelamin')->get();
         $asal_sekolah = DB::table('asal_sekolah')->get();
@@ -20,12 +21,12 @@ class PendaftaranController extends Controller
     }
 
     public function getAsalSekolah(Request $request)
-        {
-            $search = $request->query('query'); // Mendapatkan input pencarian dari query string
-            $sekolah = Asal_sekolah::where('nama_asal_sekolah', 'like', '%' . $search . '%')->get(); // Ambil data sekolah sesuai input pencarian
-            
-            return response()->json($sekolah); // Kembalikan hasil dalam format JSON
-        }
+    {
+        $search = $request->query('query');
+        $sekolah = Asal_sekolah::where('nama_asal_sekolah', 'like', '%' . $search . '%')->get();
+
+        return response()->json($sekolah);
+    }
 
     public function proses_pendaftaran(Request $request)
     {
@@ -56,7 +57,7 @@ class PendaftaranController extends Controller
             'nik_ibu' => 'nullable|string|max:20',
             'nama_ibu' => 'nullable|string|max:100',
             'pekerjaan_ibu' => 'nullable|string|max:100',
-            'id_status_orang_tua' => 'nullable|integer|exists:status_orang_tua,id',
+            'id_status_orang_tua' => 'required|integer|exists:status_orang_tua,id',
             'no_siswa' => 'required|string|max:20',
             'no_wali_siswa' => 'nullable|string|max:20',
             'blok' => 'nullable|string|max:100',
@@ -75,11 +76,10 @@ class PendaftaranController extends Controller
             $id_asal_sekolah = DB::table('asal_sekolah')->insertGetId([
                 'nama_asal_sekolah' => $request->input('nama_asal_sekolah'),
                 'created_at' => now(),
-                'updated_at' => now(),
             ]);
         }
 
-        $no_pendaftaran = Str::uuid();
+        $no_pendaftaran = 'SPMB-' . date('Y') . '-' . Str::upper(Str::random(4));
         $periode = DB::table('periode')->orderBy('created_at', 'desc')->first();
 
         $id_pendaftaran = DB::table('pendaftaran')->insertGetId([
@@ -114,7 +114,7 @@ class PendaftaranController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        return redirect('/bukti_pendaftaran/'.$id_pendaftaran);
+        return redirect('/bukti_pendaftaran/' . $id_pendaftaran);
     }
 
     public function bukti_pendaftaran($id)
@@ -125,10 +125,10 @@ class PendaftaranController extends Controller
             ->leftJoin('status_orang_tua', 'pendaftaran.id_status_orang_tua', '=', 'status_orang_tua.id')
             ->leftJoin('jenis_kelamin', 'pendaftaran.id_jenis_kelamin', '=', 'jenis_kelamin.id')
             ->select(
-                'pendaftaran.*', 
-                'asal_sekolah.nama_asal_sekolah', 
+                'pendaftaran.*',
+                'asal_sekolah.nama_asal_sekolah',
                 'konsentrasi_keahlian.nama_konsentrasi_keahlian',
-                'status_orang_tua.nama_status_orang_tua', 
+                'status_orang_tua.nama_status_orang_tua',
                 'jenis_kelamin.nama_jenis_kelamin'
             )
             ->where('pendaftaran.id', $id)

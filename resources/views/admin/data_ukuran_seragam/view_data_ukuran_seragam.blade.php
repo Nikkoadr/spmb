@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 @endsection
 @section('title')
-    {{'Data PPDB'}}
+    {{'Data SPMB'}}
 @endsection
 @section('content')
 <div class="content-wrapper">

@@ -15,22 +15,22 @@ class seed_konsentrasi_keahlian extends Seeder
     public function run()
     {
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Teknik Pengelasan (LAS)',
+            'nama_konsentrasi_keahlian' => 'Teknik Pengelasan',
         ]);
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Teknik Elektronika Industri (TEI)',
+            'nama_konsentrasi_keahlian' => 'Teknik Elektronika Industri',
         ]);
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Teknik Kendaraan Ringan (TKR)',
+            'nama_konsentrasi_keahlian' => 'Teknik Kendaraan Ringan',
         ]);
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Teknik Komputer dan Jaringan (TKJ)',
+            'nama_konsentrasi_keahlian' => 'Teknik Komputer dan Jaringan',
         ]);
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Teknik Sepeda Motor (TSM)',
+            'nama_konsentrasi_keahlian' => 'Teknik Sepeda Motor',
         ]);
         Konsentrasi_keahlian::create([
-            'nama_konsentrasi_keahlian' => 'Farmasi Klinis dan Komunitas (FKK)',
+            'nama_konsentrasi_keahlian' => 'Layanan Penunjang Kefarmasian Klinis dan Komunitas',
         ]);
     }
 }
