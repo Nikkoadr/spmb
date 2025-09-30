@@ -38,7 +38,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/form_pendaftaran', [PendaftaranController::class, 'form_pendaftaran']);
 Route::get('/get_asal_sekolah', [PendaftaranController::class, 'getAsalSekolah']);
 Route::post('/proses_pendaftaran', [PendaftaranController::class, 'proses_pendaftaran']);
-Route::get('/bukti_pendaftaran/{id}', [PendaftaranController::class, 'bukti_pendaftaran']);
+Route::get('/bukti_pendaftaran/{id}', [PendaftaranController::class, 'bukti_pendaftaran'])->name('bukti_pendaftaran');
 
 Route::get('/cari_pendaftaran', [Cari_pendaftaranController::class, 'index']);
 Route::post('/proses_cari_pendaftaran', [Cari_pendaftaranController::class, 'proses_cari_pendaftaran']);
@@ -46,7 +46,7 @@ Route::get('/scan/{code}', [Cari_pendaftaranController::class, 'scan']);
 Route::get('/isi_ukuran_seragam/{code}', [Cari_pendaftaranController::class, 'isi_ukuran_seragam']);
 Route::post('/proses_isi_ukuran_seragam_{id}', [Cari_pendaftaranController::class, 'proses_isi_ukuran_seragam']);
 
-Route::get('/data_pendaftaran', [Data_pendaftaranController::class, 'index']);
+Route::get('/data_pendaftaran', [Data_pendaftaranController::class, 'index'])->name('data_pendaftaran');
 Route::get('/data_pendaftaran/tambah', [Data_pendaftaranController::class, 'form_tambah_pendaftaran']);
 Route::post('/data_pendaftaran/proses', [Data_pendaftaranController::class, 'proses_pendaftaran_admin']);
 Route::get('/data_pendaftaran/edit/{id}', [Data_pendaftaranController::class, 'form_edit_pendaftaran_admin']);

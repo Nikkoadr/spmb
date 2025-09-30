@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Asal_sekolah;
 use Illuminate\Http\Request;
 use App\Exports\PendaftaranExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\Rule;
+use App\Models\Periode;
+use Illuminate\Support\Str;
 
 class Data_pendaftaranController extends Controller
 {
@@ -28,26 +31,22 @@ class Data_pendaftaranController extends Controller
      */
     public function index()
     {
-        $pendaftaran = DB::table('pendaftaran')
-            ->leftJoin('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')
-            ->leftJoin('konsentrasi_keahlian', 'pendaftaran.id_konsentrasi_keahlian', '=', 'konsentrasi_keahlian.id')
-            ->leftJoin('status_orang_tua', 'pendaftaran.id_status_orang_tua', '=', 'status_orang_tua.id')
-            ->leftJoin('jenis_kelamin', 'pendaftaran.id_jenis_kelamin', '=', 'jenis_kelamin.id')
-            ->leftJoin('status_siswa', 'pendaftaran.id_status_siswa', '=', 'status_siswa.id')
-            ->select(
-                'pendaftaran.*', 
-                'asal_sekolah.nama_asal_sekolah', 
-                'konsentrasi_keahlian.nama_konsentrasi_keahlian',
-                'status_orang_tua.nama_status_orang_tua', 
-                'jenis_kelamin.nama_jenis_kelamin',
-                'status_siswa.nama_status_siswa'
-            )
-            ->orderBy('created_at', 'desc')
+        $pendaftaran = Pendaftaran::with([
+            'asal_sekolah',
+            'konsentrasi_keahlian',
+            'status_orang_tua',
+            'jenis_kelamin',
+            'status_siswa',
+            'ukuran_seragam_siswa_baru',
+        ])
+            ->latest('created_at')
             ->get();
-        return view('admin.data_pendaftaran.view_data_pendaftaran', compact("pendaftaran"), ["judul" => "Data Pendaftaran"]);
+
+        return view('admin.data_pendaftaran.view_data_pendaftaran', compact('pendaftaran'));
     }
 
-    public function form_tambah_pendaftaran(){
+    public function form_tambah_pendaftaran()
+    {
         $periode = DB::table('periode')->orderBy('created_at', 'desc')->first();
         $jenis_kelamin = DB::table('jenis_kelamin')->get();
         $asal_sekolah = DB::table('asal_sekolah')->get();
@@ -59,113 +58,95 @@ class Data_pendaftaranController extends Controller
 
     public function proses_pendaftaran_admin(Request $request)
     {
-        $cek_data = DB::table('pendaftaran')
-            ->where('nama', $request->nama)
-            ->where('tanggal_lahir', $request->tanggal_lahir)
-            ->first();
-
-        if ($cek_data) {
-            return redirect()->back()->with(['error' => 'Data dengan nama dan tanggal lahir yang sama sudah ada dalam database !']);
-        }
-
-        $request->validate([
-            'tahun_ajaran' => 'required',
-            'periode' => 'required',
-            'nisn' => 'nullable',
-            'no_kk' => 'nullable',
-            'no_nik' => 'nullable',
-            'nama' => 'required|string|max:100',
-            'id_jenis_kelamin' => 'required|integer|exists:jenis_kelamin,id',
-            'tempat_lahir' => 'required|string|max:50',
-            'tanggal_lahir' => 'required|date|before:today',
-            'id_asal_sekolah' => 'nullable|integer|exists:asal_sekolah,id',
-            'nama_asal_sekolah' => 'required|string|max:100',
-            'nik_ayah' => 'nullable|string|max:20',
-            'nama_ayah' => 'nullable|string|max:100',
-            'pekerjaan_ayah' => 'nullable|string|max:100',
-            'nik_ibu' => 'nullable|string|max:20',
-            'nama_ibu' => 'nullable|string|max:100',
-            'pekerjaan_ibu' => 'nullable|string|max:100',
-            'id_status_orang_tua' => 'nullable|integer|exists:status_orang_tua,id',
-            'no_siswa' => 'required|string|max:20',
-            'no_wali_siswa' => 'nullable|string|max:20',
-            'blok' => 'nullable|string|max:100',
-            'rt' => 'nullable|numeric',
-            'rw' => 'nullable|numeric',
-            'desa' => 'nullable|string|max:100',
-            'kecamatan' => 'nullable|string|max:100',
-            'kabupaten' => 'nullable|string|max:100',
+        // 1. Validasi input
+        $validated = $request->validate([
+            'nisn'                   => 'nullable|string|max:20',
+            'no_kk'                  => 'nullable|string|max:20',
+            'no_nik'                 => 'nullable|string|max:20',
+            'nama'                   => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('pendaftaran')->where(
+                    fn($q) => $q->where('tanggal_lahir', $request->tanggal_lahir)
+                ),
+            ],
+            'id_jenis_kelamin'       => 'required|integer|exists:jenis_kelamin,id',
+            'id_asal_sekolah'        => 'nullable|integer|exists:asal_sekolah,id',
+            'id_status_orang_tua'    => 'required|integer|exists:status_orang_tua,id',
             'id_konsentrasi_keahlian' => 'required|integer|exists:konsentrasi_keahlian,id',
-            'referensi' => 'nullable|string|max:255',
+            'tempat_lahir'           => 'required|string|max:50',
+            'tanggal_lahir'          => 'required|date|before:today',
+
+            // hanya untuk buat sekolah baru (jangan ikut simpan ke pendaftaran)
+            'nama_asal_sekolah'      => 'nullable|string|max:100',
+
+            'nik_ayah'               => 'nullable|string|max:20',
+            'nama_ayah'              => 'nullable|string|max:100',
+            'pekerjaan_ayah'         => 'nullable|string|max:100',
+            'nik_ibu'                => 'nullable|string|max:20',
+            'nama_ibu'               => 'nullable|string|max:100',
+            'pekerjaan_ibu'          => 'nullable|string|max:100',
+            'no_siswa'               => 'required|string|max:20',
+            'no_wali_siswa'          => 'nullable|string|max:20',
+            'blok'                   => 'nullable|string|max:100',
+            'rt'                     => 'nullable|numeric',
+            'rw'                     => 'nullable|numeric',
+            'desa'                   => 'nullable|string|max:100',
+            'kecamatan'              => 'nullable|string|max:100',
+            'kabupaten'              => 'nullable|string|max:100',
+            'referensi'              => 'nullable|string|max:255',
         ]);
 
-        $id_asal_sekolah = $request->input('id_asal_sekolah');
+        // 2. Pisahkan nama_asal_sekolah agar tidak masuk ke tabel pendaftaran
+        $namaAsalSekolah = $validated['nama_asal_sekolah'] ?? null;
+        unset($validated['nama_asal_sekolah']);
 
-        if (!$id_asal_sekolah) {
-            $id_asal_sekolah = DB::table('asal_sekolah')->insertGetId([
-                'nama_asal_sekolah' => $request->input('nama_asal_sekolah'),
-                'created_at' => now(),
-                'updated_at' => now(),
+        // 3. Jika id_asal_sekolah kosong → buat sekolah baru
+        if (empty($validated['id_asal_sekolah']) && $namaAsalSekolah) {
+            $asal = Asal_sekolah::create([
+                'nama_asal_sekolah' => $namaAsalSekolah,
             ]);
+            $validated['id_asal_sekolah'] = $asal->id;
         }
 
-        $no_pendaftaran = Str::uuid();
-        $periode = DB::table('periode')->orderBy('created_at', 'desc')->first();
+        // 4. Ambil periode terbaru
+        $periode = Periode::latest()->first();
+        if (!$periode) {
+            return back()->with('error', 'Periode belum tersedia, hubungi admin.');
+        }
 
-        DB::table('pendaftaran')->insert([
-            'id_periode' => $periode->id,
-            'no_pendaftaran' => $no_pendaftaran,
-            'id_status_siswa' => 1,
-            'nisn' => $request->nisn,
-            'no_kk' => $request->no_kk,
-            'no_nik' => $request->no_nik,
-            'nama' => $request->nama,
-            'id_jenis_kelamin' => $request->id_jenis_kelamin,
-            'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'id_asal_sekolah' => $id_asal_sekolah,
-            'nik_ayah' => $request->nik_ayah,
-            'nama_ayah' => $request->nama_ayah,
-            'pekerjaan_ayah' => $request->pekerjaan_ayah,
-            'nik_ibu' => $request->nik_ibu,
-            'nama_ibu' => $request->nama_ibu,
-            'pekerjaan_ibu' => $request->pekerjaan_ibu,
-            'id_status_orang_tua' => $request->id_status_orang_tua,
-            'no_siswa' => $request->no_siswa,
-            'no_wali_siswa' => $request->no_wali_siswa,
-            'blok' => $request->blok,
-            'rt' => $request->rt,
-            'rw' => $request->rw,
-            'desa' => $request->desa,
-            'kecamatan' => $request->kecamatan,
-            'kabupaten' => $request->kabupaten,
-            'id_konsentrasi_keahlian' => $request->id_konsentrasi_keahlian,
-            'referensi' => $request->referensi,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        return redirect('/data_pendaftaran')->with('success', 'Data pendaftaran berhasil ditambahkan.');
-    } 
+        // 5. Generate nomor pendaftaran unik
+        $validated['no_pendaftaran'] = 'SPMB-' . date('Y') . '-' . strtoupper(Str::random(6));
+        $validated['id_periode']     = $periode->id;
+        $validated['id_status_siswa'] = 1;
+
+        // 6. Simpan ke tabel pendaftaran
+        $pendaftaran = Pendaftaran::create($validated);
+
+        // 7. Redirect ke bukti pendaftaran
+        return redirect()->route('data_pendaftaran')
+            ->with('success', 'Pendaftaran berhasil disimpan!');
+    }
 
     public function form_edit_pendaftaran_admin($id)
     {
         $pendaftaran = DB::table('pendaftaran')
-                    ->leftJoin('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')
-                    ->select('pendaftaran.*', 'asal_sekolah.nama_asal_sekolah')
-                    ->where('pendaftaran.id', $id)
-                    ->first();
+            ->leftJoin('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')
+            ->select('pendaftaran.*', 'asal_sekolah.nama_asal_sekolah')
+            ->where('pendaftaran.id', $id)
+            ->first();
         $periode = DB::table('periode')->get();
         $jenis_kelamin = DB::table('jenis_kelamin')->get();
         $konsentrasi_keahlian = DB::table('konsentrasi_keahlian')->get();
         $asal_sekolah = DB::table('asal_sekolah')->get();
         $status_orang_tua = DB::table('status_orang_tua')->get();
         $status_siswa = DB::table('status_siswa')->get();
-        return view('admin.data_pendaftaran.form_edit_pendaftaran_admin', compact('pendaftaran', 'periode', 'jenis_kelamin', 'konsentrasi_keahlian', 'asal_sekolah', 'status_orang_tua','status_siswa'));
-        
+        return view('admin.data_pendaftaran.form_edit_pendaftaran_admin', compact('pendaftaran', 'periode', 'jenis_kelamin', 'konsentrasi_keahlian', 'asal_sekolah', 'status_orang_tua', 'status_siswa'));
     }
 
     public function update_pendaftaran_admin(Request $request, $id)
-        {
+    {
         $request->validate([
             'id_status_siswa' => 'required|integer|exists:status_siswa,id',
             'nisn' => 'nullable|string|max:20',
@@ -234,10 +215,10 @@ class Data_pendaftaranController extends Controller
             ->leftJoin('status_orang_tua', 'pendaftaran.id_status_orang_tua', '=', 'status_orang_tua.id')
             ->leftJoin('jenis_kelamin', 'pendaftaran.id_jenis_kelamin', '=', 'jenis_kelamin.id')
             ->select(
-                'pendaftaran.*', 
-                'asal_sekolah.nama_asal_sekolah', 
+                'pendaftaran.*',
+                'asal_sekolah.nama_asal_sekolah',
                 'konsentrasi_keahlian.nama_konsentrasi_keahlian',
-                'status_orang_tua.nama_status_orang_tua', 
+                'status_orang_tua.nama_status_orang_tua',
                 'jenis_kelamin.nama_jenis_kelamin'
             )->where('pendaftaran.id', $id)
             ->first();
@@ -251,7 +232,8 @@ class Data_pendaftaranController extends Controller
         return redirect('/data_pendaftaran')->with('success', 'Data pendaftaran berhasil dihapus.');
     }
 
-    public function download(){
+    public function download()
+    {
         $nama_file = 'data_pendaftaran-' . date('Y-m-d') . '.xlsx';
         return Excel::download(new PendaftaranExport, $nama_file);
     }
