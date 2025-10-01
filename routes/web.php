@@ -11,7 +11,6 @@ use App\Http\Controllers\Data_asal_sekolahController;
 use App\Http\Controllers\Data_ukuran_seragamController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\TesMinatBakatController;
-use App\Models\TesMinatBakat;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +25,6 @@ use App\Models\TesMinatBakat;
 
 Route::get('/', function () {
     return view('welcome');
-    return redirect('https://forms.gle/zNAHWegGZoTeCc359');
 });
 
 Auth::routes([
@@ -69,7 +67,7 @@ Route::get('/databases/edit_konsentrasi_keahlian/{id}', [Data_konsentrasi_keahli
 Route::put('/databases/update_konsentrasi_keahlian/{id}', [Data_konsentrasi_keahlianController::class, 'update_konsentrasi_keahlian']);
 Route::get('/databases/hapus_konsentrasi_keahlian/{id}', [Data_konsentrasi_keahlianController::class, 'hapus_konsentrasi_keahlian']);
 
-Route::get('/data_asal_sekolah', [Data_asal_sekolahController::class, 'index']);
+Route::get('/data_asal_sekolah', [Data_asal_sekolahController::class, 'index'])->name('data_asal_sekolah.index');
 Route::get('/databases/form_tambah_asal_sekolah', [Data_asal_sekolahController::class, 'form_tambah_asal_sekolah']);
 Route::post('/databases/proses_tambah_asal_sekolah', [Data_asal_sekolahController::class, 'proses_tambah_asal_sekolah']);
 Route::get('/databases/edit_asal_sekolah/{id}', [Data_asal_sekolahController::class, 'form_edit_asal_sekolah']);

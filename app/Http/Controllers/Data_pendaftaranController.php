@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Pendaftaran;
 use Illuminate\Support\Facades\DB;
 use App\Models\Asal_sekolah;
+use App\Models\Jenis_kelamin;
+use App\Models\Status_orang_tua;
+use App\Models\Konsentrasi_keahlian;
 use Illuminate\Http\Request;
 use App\Exports\PendaftaranExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,13 +50,19 @@ class Data_pendaftaranController extends Controller
 
     public function form_tambah_pendaftaran()
     {
-        $periode = DB::table('periode')->orderBy('created_at', 'desc')->first();
-        $jenis_kelamin = DB::table('jenis_kelamin')->get();
-        $asal_sekolah = DB::table('asal_sekolah')->get();
-        $status_orang_tua = DB::table('status_orang_tua')->get();
-        $konsentrasi_keahlian = DB::table('konsentrasi_keahlian')->get();
+        $periode = Periode::latest('created_at')->first();
+        $jenis_kelamin = Jenis_kelamin::all();
+        $asal_sekolah = Asal_sekolah::all();
+        $status_orang_tua = Status_orang_tua::all();
+        $konsentrasi_keahlian = Konsentrasi_keahlian::all();
 
-        return view('admin.data_pendaftaran.form_tambah_pendaftaran_admin', compact('jenis_kelamin', 'asal_sekolah', 'status_orang_tua', 'konsentrasi_keahlian', 'periode'));
+        return view('admin.data_pendaftaran.form_tambah_pendaftaran_admin', compact(
+            'jenis_kelamin',
+            'asal_sekolah',
+            'status_orang_tua',
+            'konsentrasi_keahlian',
+            'periode'
+        ));
     }
 
     public function proses_pendaftaran_admin(Request $request)

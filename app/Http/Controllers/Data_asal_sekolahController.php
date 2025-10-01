@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Pendaftaran;
+use App\Models\Asal_sekolah;
+use App\Models\Jenis_asal_sekolah;
+use App\Models\Status_asal_sekolah;
 
 
 class Data_asal_sekolahController extends Controller
@@ -26,18 +29,18 @@ class Data_asal_sekolahController extends Controller
 
     public function index()
     {
-        $data_asal_sekolah = DB::table('asal_sekolah')
-            ->leftJoin('jenis_asal_sekolah', 'asal_sekolah.id_jenis_asal_sekolah', '=', 'jenis_asal_sekolah.id')
-            ->leftJoin('status_asal_sekolah', 'asal_sekolah.id_status_asal_sekolah', '=', 'status_asal_sekolah.id')
-            ->select('asal_sekolah.*', 'jenis_asal_sekolah.nama_jenis_asal_sekolah', 'status_asal_sekolah.nama_status_asal_sekolah')
+        $data_asal_sekolah = Asal_sekolah::with(['jenis_asal_sekolah', 'status_asal_sekolah'])
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('admin.data_asal_sekolah.view_data_asal_sekolah', compact('data_asal_sekolah'));
     }
+
     public function form_tambah_asal_sekolah()
     {
-        $jenis_asal_sekolah = DB::table('jenis_asal_sekolah')->get();
-        $status_asal_sekolah = DB::table('status_asal_sekolah')->get();
+        $jenis_asal_sekolah = Jenis_asal_sekolah::all();
+        $status_asal_sekolah = Status_asal_sekolah::all();
+
         return view('admin.data_asal_sekolah.form_tambah_asal_sekolah_admin', compact('jenis_asal_sekolah', 'status_asal_sekolah'));
     }
 
@@ -48,7 +51,8 @@ class Data_asal_sekolahController extends Controller
             'id_status_asal_sekolah' => 'required',
             'nama_asal_sekolah' => 'required',
         ]);
-        DB::table('asal_sekolah')->insert([
+
+        Asal_sekolah::create([
             'npsn' => $request->npsn,
             'id_jenis_asal_sekolah' => $request->id_jenis_asal_sekolah,
             'id_status_asal_sekolah' => $request->id_status_asal_sekolah,
@@ -57,15 +61,21 @@ class Data_asal_sekolahController extends Controller
             'kabupaten' => $request->kabupaten,
             'provinsi' => $request->provinsi,
         ]);
-        return redirect('data_asal_sekolah')->with(['success' => 'Data asal sekolah berhasil ditambahkan !']);
+
+        return redirect()->route('data_asal_sekolah.index')->with('success', 'Data asal sekolah berhasil ditambahkan!');
     }
 
     public function form_edit_asal_sekolah($id)
     {
-        $data_asal_sekolah = DB::table('asal_sekolah')->where('id', $id)->first();
-        $jenis_asal_sekolah = DB::table('jenis_asal_sekolah')->get();
-        $status_asal_sekolah = DB::table('status_asal_sekolah')->get();
-        return view('admin.data_asal_sekolah.form_edit_asal_sekolah_admin', compact('data_asal_sekolah', 'jenis_asal_sekolah', 'status_asal_sekolah'));
+        $data_asal_sekolah = Asal_sekolah::findOrFail($id);
+        $jenis_asal_sekolah = Jenis_asal_sekolah::all();
+        $status_asal_sekolah = Status_asal_sekolah::all();
+
+        return view('admin.data_asal_sekolah.form_edit_asal_sekolah_admin', compact(
+            'data_asal_sekolah',
+            'jenis_asal_sekolah',
+            'status_asal_sekolah'
+        ));
     }
 
     public function update_asal_sekolah(Request $request, $id)
@@ -75,7 +85,10 @@ class Data_asal_sekolahController extends Controller
             'id_status_asal_sekolah' => 'required',
             'nama_asal_sekolah' => 'required',
         ]);
-        DB::table('asal_sekolah')->where('id', $id)->update([
+
+        $asalSekolah = Asal_sekolah::findOrFail($id);
+
+        $asalSekolah->update([
             'npsn' => $request->npsn,
             'id_jenis_asal_sekolah' => $request->id_jenis_asal_sekolah,
             'id_status_asal_sekolah' => $request->id_status_asal_sekolah,
@@ -84,20 +97,25 @@ class Data_asal_sekolahController extends Controller
             'kabupaten' => $request->kabupaten,
             'provinsi' => $request->provinsi,
         ]);
-        return redirect('data_asal_sekolah')->with(['success' => 'Data asal sekolah berhasil diupdate !']);
+
+        return redirect()->route('data_asal_sekolah.index')
+            ->with('success', 'Data asal sekolah berhasil diupdate!');
     }
 
     public function hapus_asal_sekolah($id)
     {
-        // Cek apakah asal_sekolah dipakai oleh siswa
-        $siswaCount = DB::table('pendaftaran')->where('id_asal_sekolah', $id)->count();
+        // Cari data asal sekolah
+        $asalSekolah = Asal_sekolah::findOrFail($id);
+
+        // Cek apakah masih dipakai oleh siswa
+        $siswaCount = Pendaftaran::where('id_asal_sekolah', $id)->count();
 
         if ($siswaCount > 0) {
-            return redirect()->back()->with('error', 'Tidak bisa menghapus: Masih ada siswa yang terdaftar di sekolah ini.');
+            return redirect()->back()->with('error', 'Tidak bisa menghapus: masih ada siswa yang terdaftar di sekolah ini.');
         }
 
         // Jika tidak dipakai, hapus
-        DB::table('asal_sekolah')->where('id', $id)->delete();
+        $asalSekolah->delete();
 
         return redirect()->back()->with('success', 'Data asal sekolah berhasil dihapus!');
     }
