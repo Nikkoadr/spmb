@@ -148,7 +148,7 @@ $(document).ready(function() {
             <br><br>
             <p>Barcode WhatsApp Grup :</p>
             <img src="${qrCodeUrl}" alt="QR Code WhatsApp" width="150" height="150"/>
-            <br><p>Tekan OK untuk mencetak bukti pendaftaran</p>
+            <br><p>Tekan OK untuk mencetak bukti pendaftaran atau simpan bukti pendaftaran ini.</p>
         `
     }).then((result) => {
         if (result.isConfirmed) {

@@ -42,7 +42,7 @@
                                     <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                                         <a href="/cari_pendaftaran" class="btn btn-primary btn-custom py-md-3 px-md-5">Sudah Daftar</a>
                                         <a href="/form_pendaftaran" class="btn btn-light btn-custom py-md-3 px-md-5">Daftar Baru</a>
-                                        <a href="/tes_minat_bakat" class="btn btn-success btn-custom py-md-3 px-md-5">Tes Minat Bakat</a>
+                                        {{-- <a href="/tes_minat_bakat" class="btn btn-success btn-custom py-md-3 px-md-5">Tes Minat Bakat</a> --}}
                                     </div>
                             </div>
                         </div>
