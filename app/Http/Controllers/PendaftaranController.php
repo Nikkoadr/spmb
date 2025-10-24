@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Asal_sekolah;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use App\Models\Pendaftaran;
 use App\Models\Periode;
 
@@ -33,26 +31,18 @@ class PendaftaranController extends Controller
 
     public function proses_pendaftaran(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nisn' => 'nullable|string|max:20',
             'no_kk' => 'nullable|string|max:20',
             'no_nik' => 'nullable|string|max:20',
-            'nama' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::unique('pendaftaran')->where(
-                    fn($q) => $q->where('tanggal_lahir', $request->tanggal_lahir)
-                ),
-            ],
+            'nama' => 'required|string|max:100',
             'id_jenis_kelamin' => 'required|integer|exists:jenis_kelamin,id',
             'id_asal_sekolah' => 'nullable|integer|exists:asal_sekolah,id',
             'id_status_orang_tua' => 'required|integer|exists:status_orang_tua,id',
             'id_konsentrasi_keahlian' => 'required|integer|exists:konsentrasi_keahlian,id',
             'tempat_lahir' => 'required|string|max:50',
             'tanggal_lahir' => 'required|date|before:today',
-            'nama_asal_sekolah' => 'nullable|string|max:100', // hanya untuk insert asal sekolah
+            'nama_asal_sekolah' => 'nullable|string|max:100',
             'nik_ayah' => 'nullable|string|max:20',
             'nama_ayah' => 'nullable|string|max:100',
             'pekerjaan_ayah' => 'nullable|string|max:100',
@@ -70,11 +60,9 @@ class PendaftaranController extends Controller
             'referensi' => 'nullable|string|max:255',
         ]);
 
-        // Simpan nama_asal_sekolah dulu, jangan ikut masuk ke pendaftaran
         $namaAsalSekolah = $validated['nama_asal_sekolah'] ?? null;
         unset($validated['nama_asal_sekolah']);
 
-        // Jika id_asal_sekolah kosong → buat baru
         if (empty($validated['id_asal_sekolah']) && $namaAsalSekolah) {
             $asal = Asal_sekolah::create([
                 'nama_asal_sekolah' => $namaAsalSekolah,
@@ -82,22 +70,34 @@ class PendaftaranController extends Controller
             $validated['id_asal_sekolah'] = $asal->id;
         }
 
-        // Ambil periode terbaru
         $periode = Periode::latest()->first();
         if (!$periode) {
             return back()->with('error', 'Periode belum tersedia, hubungi admin.');
         }
 
-        // Generate nomor pendaftaran unik
-        $validated['no_pendaftaran'] = rand(100000, 999999);
+        $sudahAda = Pendaftaran::where('nama', $validated['nama'])
+            ->where('tanggal_lahir', $validated['tanggal_lahir'])
+            ->where('id_asal_sekolah', $validated['id_asal_sekolah'])
+            ->exists();
+
+        if ($sudahAda) {
+            return back()
+                ->withInput()
+                ->with('error', 'Calon siswa ini sudah terdaftar dalam sistem kami, silahkan lakukan daftar ulang ke sekolah.');
+        }
+
+        do {
+            $noPendaftaran = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        } while (Pendaftaran::where('no_pendaftaran', $noPendaftaran)->exists());
+
+        $validated['no_pendaftaran'] = $noPendaftaran;
         $validated['id_periode'] = $periode->id;
         $validated['id_status_siswa'] = 1;
 
-        // Simpan ke tabel pendaftaran
         $pendaftaran = Pendaftaran::create($validated);
 
-        // Redirect ke bukti pendaftaran
-        return redirect()->route('bukti_pendaftaran', $pendaftaran->id)
+        return redirect()
+            ->route('bukti_pendaftaran', $pendaftaran->id)
             ->with('success', 'Pendaftaran berhasil disimpan!');
     }
 
