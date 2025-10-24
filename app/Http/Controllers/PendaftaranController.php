@@ -89,7 +89,7 @@ class PendaftaranController extends Controller
         }
 
         // Generate nomor pendaftaran unik
-        $validated['no_pendaftaran'] = 'SPMB-' . date('Y') . '-' . strtoupper(Str::random(6));
+        $validated['no_pendaftaran'] = rand(100000, 999999);
         $validated['id_periode'] = $periode->id;
         $validated['id_status_siswa'] = 1;
 
