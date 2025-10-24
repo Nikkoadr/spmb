@@ -73,11 +73,11 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $pendaftar->nisn }}</td>
                                             <td>{{ $pendaftar->nama }}</td>
-                                            <td>{{ $pendaftar->jenisKelamin->nama_jenis_kelamin ?? '-' }}</td>
+                                            <td>{{ $pendaftar->jenis_kelamin->nama_jenis_kelamin ?? '-' }}</td>
                                             <td>{{ $pendaftar->tempat_lahir }},
                                                 {{ \Carbon\Carbon::parse($pendaftar->tanggal_lahir)->translatedFormat('d F Y') }}
                                             </td>
-                                            <td>{{ $pendaftar->asalSekolah->nama_asal_sekolah ?? '-' }}</td>
+                                            <td>{{ $pendaftar->asal_sekolah->nama_asal_sekolah ?? '-' }}</td>
                                             <td>
                                                 @if ($pendaftar->no_siswa)
                                                     <a href="https://wa.me/62{{ $pendaftar->no_siswa }}?text={{ urlencode('Assalamu’alaikum warahmatullahi wabarakatuh. Halo, ' . $pendaftar->nama . ' dari ' . ($pendaftar->asalSekolah->nama_asal_sekolah ?? '-') . '. Apakah betul Anda ingin melanjutkan ke SMK Muhammadiyah Kandanghaur? Jika ya, tolong jawab whatsapp ini dengan YA') }}"
@@ -88,7 +88,7 @@
                                                     -
                                                 @endif
                                             </td>
-                                            <td>{{ $pendaftar->konsentrasiKeahlian->nama_konsentrasi_keahlian ?? '-' }}</td>
+                                            <td>{{ $pendaftar->konsentrasi_keahlian->nama_konsentrasi_keahlian ?? '-' }}</td>
                                             <td>
                                                 @switch($pendaftar->id_status_siswa)
                                                     @case(1)

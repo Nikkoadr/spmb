@@ -11,19 +11,147 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('images/icon.ico') }}">
     <link rel="stylesheet" href="{{ asset('css/cetak.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-        ol > li { padding: 5px 10px; }
-        .header-text b { color: #007bff; display: block; }
-        .divider { height: 5px; border-bottom: 2px solid #000; border-top: 1px solid #000; margin: 10px 0; }
-        .section-title { background: #f6ff00; padding: 10px; font-size: 12pt !important; }
-        .footer-social img { width: 30px; }
+<style>
+    /* Ukuran dan pengaturan cetak */
+    @page {
+        size: A4;
+        margin: 1.2cm;
+    }
+
+    body {
+        font-family: 'Nunito', sans-serif;
+        background: #f7fafc;
+        color: #2d2d2d;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page {
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        max-width: 210mm;
+        min-height: 297mm;
+        margin: auto;
+    }
+
+    /* HEADER */
+    .header-text b {
+        color: #0077b6;
+        display: block;
+        line-height: 1.4;
+    }
+
+    .divider {
+        height: 5px;
+        border-bottom: 3px solid #0077b6;
+        border-top: 1px solid #e0e0e0;
+        margin: 10px 0 15px 0;
+    }
+
+    /* JUDUL */
+    b[style*="font-size:20pt;"] {
+        color: #023e8a;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        background: #90e0ef;
+        color: #023e8a;
+        font-weight: 700;
+        padding: 7px 10px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        font-size: 11pt !important;
+    }
+
+    /* TABLE GRID */
+    .it-grid {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        border: 1px solid #ddd;
+        font-size: 10pt;
+    }
+
+    .it-grid td {
+        border: 1px solid #e0e0e0;
+        padding: 5px 8px;
+        vertical-align: top;
+    }
+
+    .it-grid td:first-child {
+        background: #e8f8ff;
+        font-weight: 600;
+        color: #023e8a;
+        width: 230px;
+    }
+
+    .it-grid tr:nth-child(even) td {
+        background: #f9fdff;
+    }
+
+    /* NOTE BOX */
+    .note-box {
+        border: 2px dashed #00b4d8;
+        background: #e3f8ff;
+        width: 250px;
+        padding: 10px;
+        font-size: 9.5pt;
+        border-radius: 6px;
+        color: #023e8a;
+    }
+
+    /* FOOTER SOCIAL */
+    .footer-social {
+        font-size: 9pt;
+        color: #333;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 8px;
+        margin-top: 20px;
+    }
+
+    .footer-social td {
+        vertical-align: middle;
+        padding: 3px 5px;
+    }
+
+    .footer-social img {
+        width: 22px;
+        vertical-align: middle;
+    }
+
+    /* LINK */
+    a {
+        color: #0077b6;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* CETAK */
+    @media print {
+        body {
+            background: #fff;
+        }
+        .page {
+            box-shadow: none;
+            border-radius: 0;
+            margin: 0;
+            padding: 0;
+        }
         .note-box {
             border: 1px solid #000;
-            width: 250px;
-            padding: 10px;
-            font-size: 10pt;
+            background: none;
         }
-    </style>
+    }
+</style>
+
 </head>
 <body>
 <div class="page">
@@ -81,8 +209,10 @@
             <td>{{ $pendaftaran->tempat_lahir }}, {{ Carbon::parse($pendaftaran->tanggal_lahir)->translatedFormat('d F Y') }}</td>
         </tr>
         <tr><td>Asal Sekolah</td><td>{{ $pendaftaran->asal_sekolah->nama_asal_sekolah ?? '-' }}</td></tr>
+        <tr><td>NIK Ayah</td><td>{{ $pendaftaran->nik_ayah ?? '-' }}</td></tr>
         <tr><td>Nama Ayah</td><td>{{ $pendaftaran->nama_ayah ?? '-' }}</td></tr>
         <tr><td>Pekerjaan Ayah</td><td>{{ $pendaftaran->pekerjaan_ayah ?? '-' }}</td></tr>
+        <tr><td>NIK Ibu</td><td>{{ $pendaftaran->nik_ibu ?? '-' }}</td></tr>
         <tr><td>Nama Ibu</td><td>{{ $pendaftaran->nama_ibu ?? '-' }}</td></tr>
         <tr><td>Pekerjaan Ibu</td><td>{{ $pendaftaran->pekerjaan_ibu ?? '-' }}</td></tr>
         <tr><td>Status Orang Tua</td><td>{{ $pendaftaran->status_orang_tua->nama_status_orang_tua ?? '-' }}</td></tr>
