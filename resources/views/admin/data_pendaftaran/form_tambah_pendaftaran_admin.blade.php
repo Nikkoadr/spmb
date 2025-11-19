@@ -209,7 +209,7 @@
                         <div class="form-group row">
                             <label for="id_status_orang_tua" class="col-md-3 col-form-label text-md-right">Status Orang Tua :</label>
                             <div class="col-md-9">
-                                <select name="id_status_orang_tua" id="id_status_orang_tua" class="form-control @error('id_status_orang_tua') is-invalid @enderror" required>
+                                <select name="id_status_orang_tua" id="id_status_orang_tua" class="form-control @error('id_status_orang_tua') is-invalid @enderror">
                                     <option value="">Pilih Status Orang Tua</option>
                                     @foreach($status_orang_tua as $status)
                                         <option value="{{ $status->id }}" {{ old('id_status_orang_tua') == $status->id ? 'selected' : '' }}>
