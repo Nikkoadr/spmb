@@ -64,10 +64,20 @@ class PendaftaranController extends Controller
         unset($validated['nama_asal_sekolah']);
 
         if (empty($validated['id_asal_sekolah']) && $namaAsalSekolah) {
-            $asal = Asal_sekolah::create([
-                'nama_asal_sekolah' => $namaAsalSekolah,
-            ]);
-            $validated['id_asal_sekolah'] = $asal->id;
+
+            // CARI SEKOLAH DENGAN NAMA YANG PERSIS SAMA
+            $asal = Asal_sekolah::where('nama_asal_sekolah', $namaAsalSekolah)->first();
+
+            // JIKA ADA → GUNAKAN ID LAMA
+            if ($asal) {
+                $validated['id_asal_sekolah'] = $asal->id;
+            } else {
+                // JIKA BELUM ADA → BUAT BARU
+                $asal = Asal_sekolah::create([
+                    'nama_asal_sekolah' => $namaAsalSekolah,
+                ]);
+                $validated['id_asal_sekolah'] = $asal->id;
+            }
         }
 
         $periode = Periode::latest()->first();
