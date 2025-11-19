@@ -82,7 +82,7 @@ class Data_pendaftaranController extends Controller
             ],
             'id_jenis_kelamin'       => 'required|integer|exists:jenis_kelamin,id',
             'id_asal_sekolah'        => 'nullable|integer|exists:asal_sekolah,id',
-            'id_status_orang_tua'    => 'required|integer|exists:status_orang_tua,id',
+            'id_status_orang_tua'    => 'nullable|integer|exists:status_orang_tua,id',
             'id_konsentrasi_keahlian' => 'required|integer|exists:konsentrasi_keahlian,id',
             'tempat_lahir'           => 'required|string|max:50',
             'tanggal_lahir'          => 'required|date|before:today',
