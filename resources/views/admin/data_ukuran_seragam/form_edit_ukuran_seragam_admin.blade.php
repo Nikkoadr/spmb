@@ -33,7 +33,7 @@
                     <h3 class="card-title">Form Edit Ukuran Seragam</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ url('/databases/update_ukuran_seragam/'.$data_ukuran_seragam->id) }}" method="POST">
+                    <form action="{{ route('data_ukuran_seragam.update', $data_ukuran_seragam->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -42,7 +42,7 @@
                             <label for="nama" class="col-md-2 col-form-label text-md-right">Nama Siswa :</label>
                             <div class="col-md-10">
                                 <input type="text" class="form-control" 
-                                       value="{{ $data_ukuran_seragam->pendaftaran->nama }}" readonly>
+                                    value="{{ $data_ukuran_seragam->pendaftaran->nama }}" readonly>
                             </div>
                         </div>
 
@@ -58,28 +58,25 @@
                                     <option value="L">L</option>
                                     <option value="XL">XL</option>
                                     <option value="XXL">XXL</option>
-                                    <option value="JUMBO">JUMBO (Ukur Ulang)</option>
+                                    <option value="XXXL">XXXL</option>
+                                    <option value="XXXXL">XXXXL</option>
                                 </select>
                             </div>
                         </div>
-
-                        {{-- Ukuran Panjang Celana --}}
                         <div class="form-group row">
-                            <label for="ukuran_panjang_celana" class="col-md-2 col-form-label text-md-right">Ukuran Celana Panjang:</label>
+                            <label for="ukuran_celana" class="col-md-2 col-form-label text-md-right">Ukuran Celana :</label>
                             <div class="col-md-10">
-                                <input type="text" class="form-control" id="ukuran_panjang_celana" 
-                                       name="ukuran_panjang_celana" 
-                                       value="{{ $data_ukuran_seragam->ukuran_panjang_celana }}" required>
-                            </div>
-                        </div>
-
-                        {{-- Ukuran Lingkar Pinggang --}}
-                        <div class="form-group row">
-                            <label for="ukuran_lingkar_pinggang_celana" class="col-md-2 col-form-label text-md-right">Ukuran Lingkar Pinggang:</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control" id="ukuran_lingkar_pinggang_celana" 
-                                       name="ukuran_lingkar_pinggang_celana" 
-                                       value="{{ $data_ukuran_seragam->ukuran_lingkar_pinggang_celana }}" required>
+                                <select class="form-control" name="ukuran_celana" id="ukuran_celana" required>
+                                    <option value="{{ $data_ukuran_seragam->ukuran_celana }}" selected>
+                                        {{ $data_ukuran_seragam->ukuran_celana }}
+                                    </option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                    <option value="XXXL">XXXL</option>
+                                    <option value="XXXXL">XXXXL</option>
+                                </select>
                             </div>
                         </div>
 
@@ -91,9 +88,15 @@
                                     <option value="{{ $data_ukuran_seragam->ukuran_sepatu }}" selected>
                                         {{ $data_ukuran_seragam->ukuran_sepatu }}
                                     </option>
-                                    @for ($i = 37; $i <= 44; $i++)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
+                                    <option value="37">37</option>
+                                    <option value="38">38</option>
+                                    <option value="39">39</option>
+                                    <option value="40">40</option>
+                                    <option value="41">41</option>
+                                    <option value="42">42</option>
+                                    <option value="43">43</option>
+                                    <option value="44">44</option>
+                                    <option value="45">45</option>
                                 </select>
                             </div>
                         </div>

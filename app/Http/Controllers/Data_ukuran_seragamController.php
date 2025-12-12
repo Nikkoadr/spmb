@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Data_ukuran_seragamExport;
 use App\Models\Pendaftaran;
@@ -42,6 +42,22 @@ class Data_ukuran_seragamController extends Controller
         $data = Pendaftaran::where('no_pendaftaran', $code)->firstOrFail();
         return view('admin.data_ukuran_seragam.form_tambah_ukuran_seragam_admin', compact('data'));
     }
+    public function store_ukuran_seragam(Request $request, $id)
+    {
+        $request->validate([
+            'ukuran_baju' => 'required',
+            'ukuran_celana' => 'required',
+            'ukuran_sepatu' => 'required',
+        ]);
+        Ukuran_seragam_siswa_baru::create([
+            'id_pendaftaran' => $id,
+            'ukuran_baju' => $request->ukuran_baju,
+            'ukuran_celana' => $request->ukuran_celana,
+            'ukuran_sepatu' => $request->ukuran_sepatu,
+        ]);
+        return redirect('/data_ukuran_seragam')
+            ->with('success', 'Data ukuran baju, celana, dan sepatu berhasil ditambahkan.');
+    }
 
     public function form_edit_ukuran_seragam($id)
     {
@@ -58,8 +74,7 @@ class Data_ukuran_seragamController extends Controller
     {
         $request->validate([
             'ukuran_baju' => 'required',
-            'ukuran_panjang_celana' => 'required',
-            'ukuran_lingkar_pinggang_celana' => 'required',
+            'ukuran_celana' => 'required',
             'ukuran_sepatu' => 'required'
         ]);
 
@@ -67,8 +82,7 @@ class Data_ukuran_seragamController extends Controller
 
         $ukuran->update([
             'ukuran_baju' => $request->ukuran_baju,
-            'ukuran_panjang_celana' => $request->ukuran_panjang_celana,
-            'ukuran_lingkar_pinggang_celana' => $request->ukuran_lingkar_pinggang_celana,
+            'ukuran_celana' => $request->ukuran_celana,
             'ukuran_sepatu' => $request->ukuran_sepatu,
         ]);
 

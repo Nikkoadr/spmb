@@ -41,7 +41,7 @@
                         </div>
                         <div class="card-body">
 
-                            <form action="{{ url('/proses_isi_ukuran_seragam/' . $data->id) }}" method="POST">
+                            <form action="{{route('data_ukuran_seragam.store', $data->id)}}" method="POST">
                                 @csrf
                                 <div class="form-group row">
                                     <label for="nama" class="col-sm-2 col-form-label">Nama :</label>
@@ -51,54 +51,50 @@
                                     </div>
                                 </div>
 
-                                <!-- Ukuran Baju -->
-                                <img width="1000" src="{{ asset('assets/img/ukuran/ukuran_baju.png') }}" alt="Ukuran Baju">
                                 <div class="form-group row">
                                     <label for="ukuran_baju" class="col-sm-2 col-form-label">Ukuran Baju :</label>
                                     <div class="col-sm-10">
                                         <select name="ukuran_baju" id="ukuran_baju" class="form-control" required>
                                             <option value="">Pilih Ukuran</option>
-                                            @foreach (['M','L','XL','XXL','JUMBO'] as $baju)
-                                                <option value="{{ $baju }}" {{ old('ukuran_baju') == $baju ? 'selected' : '' }}>
-                                                    {{ $baju == 'JUMBO' ? 'JUMBO (Ukur Ulang)' : $baju }}
-                                                </option>
-                                            @endforeach
+                                            <option value="M" {{ old('ukuran_baju') == 'M' ? 'selected' : '' }}>M</option>
+                                            <option value="L" {{ old('ukuran_baju') == 'L' ? 'selected' : '' }}>L</option>
+                                            <option value="XL" {{ old('ukuran_baju') == 'XL' ? 'selected' : '' }}>XL</option>
+                                            <option value="XXL" {{ old('ukuran_baju') == 'XXL' ? 'selected' : '' }}>XXL</option>
+                                            <option value="XXXL" {{ old('ukuran_baju') == 'XXXL' ? 'selected' : '' }}>XXXL</option>
+                                            <option value="XXXXL" {{ old('ukuran_baju') == 'XXXXL' ? 'selected' : '' }}>XXXXL</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <!-- Ukuran Celana -->
-                                <img width="1000" src="{{ asset('assets/img/ukuran/ukuran_celana.png') }}" alt="Ukuran Celana">
                                 <div class="form-group row">
                                     <label for="ukuran_panjang_celana" class="col-sm-2 col-form-label">Panjang Celana :</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="ukuran_panjang_celana"
-                                            name="ukuran_panjang_celana" value="{{ old('ukuran_panjang_celana') }}"
-                                            placeholder="Ukuran Panjang Celana" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="ukuran_lingkar_pinggang_celana" class="col-sm-2 col-form-label">Lingkar Pinggang :</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="ukuran_lingkar_pinggang_celana"
-                                            name="ukuran_lingkar_pinggang_celana"
-                                            value="{{ old('ukuran_lingkar_pinggang_celana') }}"
-                                            placeholder="Ukuran Lingkar Pinggang Celana" required>
+                                        <select name="ukuran_celana" id="ukuran_celana" class="form-control" required>
+                                            <option value="">Pilih Ukuran</option>
+                                            <option value="M" {{ old('ukuran_celana') == 'M' ? 'selected' : '' }}>M</option>
+                                            <option value="L" {{ old('ukuran_celana') == 'L' ? 'selected' : '' }}>L</option>
+                                            <option value="XL" {{ old('ukuran_celana') == 'XL' ? 'selected' : '' }}>XL</option>
+                                            <option value="XXL" {{ old('ukuran_celana') == 'XXL' ? 'selected' : '' }}>XXL</option>
+                                            <option value="XXXL" {{ old('ukuran_celana') == 'XXXL' ? 'selected' : '' }}>XXXL</option>
+                                            <option value="XXXXL" {{ old('ukuran_celana') == 'XXXXL' ? 'selected' : '' }}>XXXXL</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Ukuran Sepatu -->
-                                <img width="700" src="{{ asset('assets/img/ukuran/ukuran_sepatu.webp') }}" alt="Ukuran Sepatu">
                                 <div class="form-group row">
                                     <label for="ukuran_sepatu" class="col-sm-2 col-form-label">Ukuran Sepatu :</label>
                                     <div class="col-sm-10">
                                         <select name="ukuran_sepatu" id="ukuran_sepatu" class="form-control" required>
                                             <option value="">Pilih Ukuran</option>
-                                            @foreach (range(37,44) as $sepatu)
-                                                <option value="{{ $sepatu }}" {{ old('ukuran_sepatu') == $sepatu ? 'selected' : '' }}>
-                                                    {{ $sepatu }}
-                                                </option>
-                                            @endforeach
+                                            <option value="37" {{ old('ukuran_sepatu') == '37' ? 'selected' : '' }}>37</option>
+                                            <option value="38" {{ old('ukuran_sepatu') == '38' ? 'selected' : '' }}>38</option>
+                                            <option value="39" {{ old('ukuran_sepatu') == '39' ? 'selected' : '' }}>39</option>
+                                            <option value="40" {{ old('ukuran_sepatu') == '40' ? 'selected' : '' }}>40</option>
+                                            <option value="41" {{ old('ukuran_sepatu') == '41' ? 'selected' : '' }}>41</option>
+                                            <option value="42" {{ old('ukuran_sepatu') == '42' ? 'selected' : '' }}>42</option>
+                                            <option value="43" {{ old('ukuran_sepatu') == '43' ? 'selected' : '' }}>43</option>
+                                            <option value="44" {{ old('ukuran_sepatu') == '44' ? 'selected' : '' }}>44</option>
+                                            <option value="45" {{ old('ukuran_sepatu') == '45' ? 'selected' : '' }}>45</option>
                                         </select>
                                     </div>
                                 </div>

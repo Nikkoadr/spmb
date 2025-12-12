@@ -16,11 +16,9 @@ class CreateUkuranSeragamSiswaBaruTable extends Migration
         Schema::create('ukuran_seragam_siswa_baru', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_pendaftaran')->nullable()->index()->references('id')->on('pendaftaran');
-            $table->enum('ukuran_baju', ['M', 'L', 'XL','XXL','JUMBO'])->nullable();
-            $table->string('ukuran_panjang_celana')->nullable();
-            $table->string('ukuran_lingkar_pinggang_celana')->nullable();
-            $table->enum('ukuran_celana', ['M', 'L', 'XL','XXL','XXXL','JUMBO'])->nullable();
-            $table->enum('ukuran_sepatu', ['37', '38', '39', '40','41','42','43','44'])->nullable();
+            $table->enum('ukuran_baju', ['M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'])->nullable();
+            $table->enum('ukuran_celana', ['M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'])->nullable();
+            $table->enum('ukuran_sepatu', ['37', '38', '39', '40', '41', '42', '43', '44', '45'])->nullable();
             $table->timestamps();
         });
     }

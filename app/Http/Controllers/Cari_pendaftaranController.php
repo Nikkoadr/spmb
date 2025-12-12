@@ -67,19 +67,16 @@ class Cari_pendaftaranController extends Controller
     {
         $request->validate([
             'ukuran_baju' => 'required',
-            'ukuran_panjang_celana' => 'required',
-            'ukuran_lingkar_pinggang_celana' => 'required',
+            'ukuran_celana' => 'required',
             'ukuran_sepatu' => 'required',
         ]);
 
-        // cek apakah sudah ada ukuran untuk id_pendaftaran ini
         $ukuran = Ukuran_seragam_siswa_baru::where('id_pendaftaran', $id)->first();
 
         if ($ukuran) {
             $ukuran->update([
                 'ukuran_baju' => $request->ukuran_baju,
-                'ukuran_panjang_celana' => $request->ukuran_panjang_celana,
-                'ukuran_lingkar_pinggang_celana' => $request->ukuran_lingkar_pinggang_celana,
+                'ukuran_celana' => $request->ukuran_celana,
                 'ukuran_sepatu' => $request->ukuran_sepatu,
             ]);
 

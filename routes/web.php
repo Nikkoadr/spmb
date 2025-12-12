@@ -77,8 +77,9 @@ Route::get('/databases/hapus_asal_sekolah/{id}', [Data_asal_sekolahController::c
 Route::get('/data_ukuran_seragam', [Data_ukuran_seragamController::class, 'index']);
 Route::get('/data_ukuran_seragam/download', [Data_ukuran_seragamController::class, 'download']);
 Route::get('/databases/form_tambah_ukuran_seragam/{code}', [Data_ukuran_seragamController::class, 'form_tambah_ukuran_seragam']);
+Route::post('/databases/ukuran_seragam/store/{id}', [Data_ukuran_seragamController::class, 'store_ukuran_seragam'])->name('data_ukuran_seragam.store');
 Route::get('/databases/edit_ukuran_seragam/{id}', [Data_ukuran_seragamController::class, 'form_edit_ukuran_seragam']);
-Route::put('/databases/update_ukuran_seragam/{id}', [Data_ukuran_seragamController::class, 'update_ukuran_seragam']);
+Route::put('/databases/update_ukuran_seragam/{id}', [Data_ukuran_seragamController::class, 'update_ukuran_seragam'])->name('data_ukuran_seragam.update');
 Route::get('/databases/hapus_ukuran_seragam/{id}', [Data_ukuran_seragamController::class, 'hapus_ukuran_seragam']);
 
 Route::get('/tes_minat_bakat', [TesMinatBakatController::class, 'index']);
