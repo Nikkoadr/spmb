@@ -18,12 +18,12 @@ class PendaftaranExport implements FromCollection, WithHeadings, WithMapping, Wi
     public function collection()
     {
         return DB::table('pendaftaran')
-            ->join('periode', 'pendaftaran.id_periode', '=', 'periode.id')
-            ->join('status_siswa', 'pendaftaran.id_status_siswa', '=', 'status_siswa.id')
-            ->join('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')
-            ->join('jenis_kelamin', 'pendaftaran.id_jenis_kelamin', '=', 'jenis_kelamin.id')
-            ->join('konsentrasi_keahlian', 'pendaftaran.id_konsentrasi_keahlian', '=', 'konsentrasi_keahlian.id')
-            ->join('status_orang_tua', 'pendaftaran.id_status_orang_tua', '=', 'status_orang_tua.id')
+            ->leftJoin('periode', 'pendaftaran.id_periode', '=', 'periode.id')
+            ->leftJoin('status_siswa', 'pendaftaran.id_status_siswa', '=', 'status_siswa.id')
+            ->leftJoin('asal_sekolah', 'pendaftaran.id_asal_sekolah', '=', 'asal_sekolah.id')
+            ->leftJoin('jenis_kelamin', 'pendaftaran.id_jenis_kelamin', '=', 'jenis_kelamin.id')
+            ->leftJoin('konsentrasi_keahlian', 'pendaftaran.id_konsentrasi_keahlian', '=', 'konsentrasi_keahlian.id')
+            ->leftJoin('status_orang_tua', 'pendaftaran.id_status_orang_tua', '=', 'status_orang_tua.id')
             ->select(
                 'status_siswa.nama_status_siswa',
                 'pendaftaran.no_pendaftaran',
@@ -95,37 +95,46 @@ class PendaftaranExport implements FromCollection, WithHeadings, WithMapping, Wi
     public function map($row): array
     {
         return [
-            $row->nama_status_siswa,
-            $row->no_pendaftaran,
-            $row->tahun_ajaran,
-            $row->periode_aktif,
-            "'" . $row->nisn,
-            "'" . $row->no_kk,
-            "'" . $row->no_nik,
-            $row->nama,
-            $row->nama_jenis_kelamin,
-            $row->tempat_lahir,
-            $row->tanggal_lahir,
-            $row->nama_status_orang_tua,
-            "'" . $row->nik_ayah,
-            $row->nama_ayah,
-            $row->pekerjaan_ayah,
-            "'" . $row->nik_ibu,
-            $row->nama_ibu,
-            $row->pekerjaan_ibu,
-            $row->blok,
-            $row->rt,
-            $row->rw,
-            $row->desa,
-            $row->kecamatan,
-            $row->kabupaten,
-            "'" . $row->no_siswa,
-            "'" . $row->no_wali_siswa,
-            $row->nama_asal_sekolah,
-            $row->nama_konsentrasi_keahlian,
-            $row->referensi,
+            $row->nama_status_siswa ?? 'Belum Memiliki Status Siswa',
+            $row->no_pendaftaran ?? 'Belum Memiliki No. Pendaftaran',
+            $row->tahun_ajaran ?? 'Belum Memiliki Tahun Ajaran',
+            $row->periode_aktif ?? 'Belum Memiliki Periode Aktif',
+
+            $row->nisn ? "'" . $row->nisn : 'Belum Memiliki NISN',
+            $row->no_kk ? "'" . $row->no_kk : 'Belum Memiliki No. KK',
+            $row->no_nik ? "'" . $row->no_nik : 'Belum Memiliki NIK',
+
+            $row->nama ?? 'Belum Memiliki Nama',
+            $row->nama_jenis_kelamin ?? 'Belum Memiliki Jenis Kelamin',
+            $row->tempat_lahir ?? 'Belum Memiliki Tempat Lahir',
+            $row->tanggal_lahir ?? 'Belum Memiliki Tanggal Lahir',
+
+            $row->nama_status_orang_tua ?? 'Belum Memiliki Status Orang Tua',
+
+            $row->nik_ayah ? "'" . $row->nik_ayah : 'Belum Memiliki NIK Ayah',
+            $row->nama_ayah ?? 'Belum Memiliki Nama Ayah',
+            $row->pekerjaan_ayah ?? 'Belum Memiliki Pekerjaan Ayah',
+
+            $row->nik_ibu ? "'" . $row->nik_ibu : 'Belum Memiliki NIK Ibu',
+            $row->nama_ibu ?? 'Belum Memiliki Nama Ibu',
+            $row->pekerjaan_ibu ?? 'Belum Memiliki Pekerjaan Ibu',
+
+            $row->blok ?? 'Belum Memiliki Blok',
+            $row->rt ?? 'Belum Memiliki RT',
+            $row->rw ?? 'Belum Memiliki RW',
+            $row->desa ?? 'Belum Memiliki Desa',
+            $row->kecamatan ?? 'Belum Memiliki Kecamatan',
+            $row->kabupaten ?? 'Belum Memiliki Kabupaten',
+
+            $row->no_siswa ? "'" . $row->no_siswa : 'Belum Memiliki No. Siswa',
+            $row->no_wali_siswa ? "'" . $row->no_wali_siswa : 'Belum Memiliki No. Wali Siswa',
+
+            $row->nama_asal_sekolah ?? 'Belum Memiliki Asal Sekolah',
+            $row->nama_konsentrasi_keahlian ?? 'Belum Memiliki Konsentrasi Keahlian',
+            $row->referensi ?? 'Belum Memiliki Referensi',
         ];
     }
+
     public function styles(Worksheet $sheet)
     {
         return [
