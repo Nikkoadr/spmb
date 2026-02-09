@@ -81,36 +81,34 @@
                                             <td>
                                             @if ($pendaftar->no_siswa)
                                                 <a href="https://wa.me/62{{ $pendaftar->no_siswa }}?text={{ urlencode(
-                                            'Assalamu’alaikum warahmatullahi wabarakatuh.
+                                                    'Assalamu’alaikum warahmatullahi wabarakatuh.' . "\n\n" .
+                                                    'Dengan hormat,' . "\n" .
+                                                    'Kami mengundang calon siswa baru SMK Muhammadiyah Kandanghaur atas nama ' .
+                                                    $pendaftar->nama . ' dari ' .
+                                                    ($pendaftar->asal_sekolah->nama_asal_sekolah ?? '-') .
+                                                    ' untuk melakukan pendaftaran ulang sekaligus pengukuran seragam sekolah.' . "\n\n" .
 
-                                            Dengan hormat,
-                                            Kami mengundang calon siswa baru SMK Muhammadiyah Kandanghaur atas nama '
-                                            . $pendaftar->nama .
-                                            ' dari '
-                                            . ($pendaftar->asal_sekolah->nama_asal_sekolah ?? '-')
-                                            . ' untuk melakukan pendaftaran ulang sekaligus pengukuran seragam sekolah.
+                                                    'Kegiatan ini dilaksanakan setiap hari Senin s/d Jumat,' . "\n" .
+                                                    'Pukul 08.00 s/d 15.30 WIB,' . "\n" .
+                                                    'bertempat di SMK Muhammadiyah Kandanghaur.' . "\n\n" .
 
-                                            Kegiatan ini dilaksanakan setiap hari Senin s/d Jumat,
-                                            Pukul 08.00 s/d 15.30 WIB,
-                                            bertempat di SMK Muhammadiyah Kandanghaur.
+                                                    'Sehubungan dengan jumlah pendaftar yang telah mencapai 500 calon siswa, maka diadakan pendaftaran ulang sebagai bentuk konfirmasi dan keseriusan calon siswa dalam melanjutkan proses penerimaan di SMK Muhammadiyah Kandanghaur.' . "\n\n" .
 
-                                            Sehubungan dengan jumlah pendaftar yang telah mencapai 500 calon siswa, maka diadakan pendaftaran ulang sebagai bentuk konfirmasi dan keseriusan calon siswa dalam melanjutkan proses penerimaan di SMK Muhammadiyah Kandanghaur.
+                                                    'Calon siswa diharapkan hadir sesuai jadwal dengan membawa uang DP sebesar Rp 500.000 sebagai pembayaran awal biaya seragam sekolah.' . "\n\n" .
 
-                                            Calon siswa diharapkan hadir sesuai jadwal dengan membawa uang DP sebesar Rp 500.000 sebagai pembayaran awal biaya seragam sekolah.
+                                                    'Demikian undangan ini kami sampaikan.' . "\n" .
+                                                    'Atas perhatian dan kehadirannya kami ucapkan terima kasih.' . "\n\n" .
 
-                                            Demikian undangan ini kami sampaikan.
-                                            Atas perhatian dan kehadirannya kami ucapkan terima kasih.
-
-                                            Wassalamu’alaikum warahmatullahi wabarakatuh.
-
-                                            Panitia SMPB'
-                                            ) }}"
+                                                    'Wassalamu’alaikum warahmatullahi wabarakatuh.' . "\n\n" .
+                                                    'Panitia SMPB'
+                                                ) }}"
                                                 target="_blank">
                                                     {{ $pendaftar->no_siswa }}
                                                 </a>
                                             @else
-                                                    -
-                                                @endif
+                                                -
+                                            @endif
+
                                             </td>
                                             <td>{{ $pendaftar->konsentrasi_keahlian->nama_konsentrasi_keahlian ?? '-' }}</td>
                                             <td>
